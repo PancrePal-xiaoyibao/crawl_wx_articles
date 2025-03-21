@@ -198,8 +198,19 @@ class AutoWxCrawler:
                 content_blocks.append(text)
                 processed_content.add(text)
             
+            # 删除重复的内容块
+            unique_blocks = []
+            seen_blocks = set()
+            
+            for block in content_blocks:
+                # 规范化内容以进行更准确的比较
+                normalized_block = re.sub(r'\s+', ' ', block.strip())
+                if normalized_block and normalized_block not in seen_blocks:
+                    unique_blocks.append(block)
+                    seen_blocks.add(normalized_block)
+            
             # 合并内容块，每个块之间添加空行
-            markdown_content += '\n\n'.join(content_blocks)
+            markdown_content += '\n\n'.join(unique_blocks)
             
             # 删除文末广告内容
             ad_patterns = [
@@ -208,6 +219,10 @@ class AutoWxCrawler:
                 r'投稿：.*?\n',
                 r'诊疗经验谈\s+\d+\s*\n',
                 r'继续滑动看下一个.*?\n',
+                r'版权声明[\s\S]*?良医汇.*?APP["\)]',
+                r'责任编辑.*?\n',
+                r'排版编辑.*?\n',
+                r'来源：.*?\n'
             ]
             
             for pattern in ad_patterns:

@@ -1,0 +1,4 @@
+undetected-chromedriver>=3.5.3
+selenium>=4.15.2
+urllib3>=2.1.0
+requests>=2.31.0
